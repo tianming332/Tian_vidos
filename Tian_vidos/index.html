@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短视频作品集 - 专业版</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 隐藏 header 提高视觉冲击力 */
+        header { display: none; }
+    </style>
+</head>
+<body class="dark-background">
+
+   <aside class="left-sidebar">
+    <a href="https://tianming332.github.io/TianJiangming-s-portfolio/" class="sidebar-logo-link" title="返回个人主页">
+        <img src="assets/TIAN_logo.png" alt="个人主页Logo" class="sidebar-logo">
+    </a>
+    <nav class="sidebar-nav">
+        <ul>
+            <li>
+                <a href="#" class="nav-item active" title="照片页面">
+                    <img src="assets/photo_icon.png" alt="照片页面" class="nav-icon">
+                </a>
+            </li>
+            </ul>
+    </nav>
+    <div class="sidebar-bottom">
+        <button id="music-toggle-btn" class="music-control-btn" title="背景音乐开关">
+            <img id="music-icon" src="assets/music_stop.png" alt="音乐开关">
+        </button>
+    </div>
+</aside>
+
+    <main class="main-content">
+        <div class="control-panel">
+            <button id="shuffle-btn">一键随机排版</button>
+        </div>
+        
+        <section id="masonry-container" class="masonry-grid">
+            </section>
+    </main>
+    
+    <div id="modal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <video id="modal-video" controls loop autoplay></video>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+                <p id="modal-description"></p>
+                <button class="close-btn" onclick="closeModal()">关闭 (ESC)</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="background-music" preload="auto"></audio>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
