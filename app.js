@@ -15,7 +15,7 @@ const musicFxContainer = document.getElementById('music-fx-container');
 // 音乐文件列表 (请根据您的音乐文件路径修改)
 const musicFiles = [
     'music/bgm_01.mp3',
-    'music/bgm_02.mp4', // 确保这个路径正确
+    'music/bgm_02.mp4', 
     'music/bgm_03.mp3'
 ];
 let currentTrackIndex = 0;
@@ -223,6 +223,7 @@ function renderVideos(data) {
 
 // --- 初始加载和事件绑定 (保持不变) ---
 document.addEventListener('DOMContentLoaded', function() {
+    // 确保 videoData 全局变量已加载 (来自 data.js)
     if (typeof videoData === 'undefined' || videoData.length === 0) {
         console.error("视频数据未找到或为空。请检查 data.js 文件是否正确引入。");
         return;

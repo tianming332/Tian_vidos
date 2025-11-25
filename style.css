@@ -43,6 +43,7 @@ body.dark-background {
 .nav-item:hover, .nav-item.active { background-color: #555; }
 .nav-icon { width: 28px; height: 28px; object-fit: contain; }
 .sidebar-bottom { padding-top: 20px; }
+
 /* 修复并添加 music-control-btn 样式 */
 .music-control-btn {
     width: 50px; 
@@ -59,9 +60,19 @@ body.dark-background {
 .music-control-btn:hover {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
-.music-control-btn img { /* ... */ }
-@keyframes spin { /* ... */ }
-.music-playing img { /* ... */ }
+/* 这里是旋转动画相关的样式，需要确保它们完整 */
+.music-control-btn img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+}
+@keyframes spin { 
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.music-playing img { 
+    animation: spin 3s linear infinite; 
+}
 
 /* 新增：播放时的选中发光效果 (通过 JS 添加 .music-playing class) */
 .music-playing {
@@ -69,7 +80,6 @@ body.dark-background {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
                 0 0 5px rgba(255, 255, 255, 0.5) inset;
 }
-/* ... (接您的代码) ... */
 
 /* --- 主内容区域调整 (桌面端) --- */
 .main-content {
@@ -86,8 +96,12 @@ body.dark-background {
     padding: 10px 120px 0 120px; 
     text-align: right; 
 }
-#shuffle-btn { /* ... */ }
-#shuffle-btn:hover { /* ... */ }
+#shuffle-btn { 
+    /* 假设按钮样式未提供，这里保留空位 */ 
+}
+#shuffle-btn:hover { 
+    /* 假设按钮 hover 样式未提供，这里保留空位 */ 
+}
 
 
 /* --- 瀑布流容器样式 (桌面端) --- */
@@ -126,7 +140,7 @@ body.dark-background {
     .sidebar-logo-link { display: none; } 
     .sidebar-nav ul { display: flex; flex-direction: row; flex-grow: 1; justify-content: space-around; align-items: center; height: 100%; }
     .sidebar-nav li { margin-bottom: 0; }
-    .sidebar-bottom { display: none; }
+    .sidebar-bottom { display: none; } /* 移动端隐藏底部音乐按钮 */
 
     /* 布局优化 2: 主内容区域 (为顶部/底部导航栏留出空间) */
     .main-content {
@@ -178,6 +192,7 @@ body.dark-background {
 @media (max-width: 480px) {
     .masonry-grid { column-count: 1; } 
 }
+
 /* --- 新增：音符特效容器和粒子样式 --- */
 
 /* 确保特效容器在按钮上方，且不影响按钮布局 */
