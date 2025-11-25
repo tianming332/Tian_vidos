@@ -16,7 +16,7 @@ const videoData = [
     { src: "videos/vid_15.mp4", title: "北海道之行 #15", description: "电车与列车与城市摩天轮画面拼贴成独特视觉。" },
     { src: "videos/vid_16.mp4", title: "乐高浅草寺 #16", description: "名古屋乐高主题公园里的浅草寺。" },
     { src: "videos/vid_17.mp4", title: "水族馆珊瑚微景观 #17", description: "柔软的珊瑚在蓝光下轻轻摇曳。" },
-    { src: "videos/vid_18.mp4", title: "兔子玩偶沐光 #18", description: "这是第十八个作品的简短介绍。" },
+    { src: "videos/vid_18.mp4", title: "兔子玩偶沐光 #18", description: "小兔子玩偶晒太阳。" },
     { src: "videos/vid_19.mp4", title: "寺庙屋檐的钟与天空 #19", description: "古建筑屋檐在蓝天之下钟声围绕格外静谧。" },
     { src: "videos/vid_20.mp4", title: "言叶之庭 #20", description: "新宿御宛里一颗垂树的倒影在平静的水面上轻轻晃动。。" },
     { src: "videos/vid_21.mp4", title: "金色芦苇 #21", description: "风吹起芦苇，带来柔和的秋意。" },
