@@ -1,3 +1,0 @@
-assets/music_play.png (播放状态的圆形图标)
-
-assets/music_stop.png (停止状态的圆形图标)
