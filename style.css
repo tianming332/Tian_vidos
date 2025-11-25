@@ -1,0 +1,226 @@
+/* --- 关键基础修正 (消除滚动条和重叠 Bug 的核心设置) --- */
+*, *::before, *::after {
+    box-sizing: border-box; /* 确保 padding/border 不会导致溢出 */
+}
+
+/* 确保 HTML 和 Body 占满视口，且不出现意外滚动条 */
+html, body {
+    height: 100%; 
+    width: 100%; 
+    overflow: hidden; /* 仅允许 main-content 滚动 */
+    margin: 0;
+    padding: 0;
+}
+
+body.dark-background {
+    background-color: #000000; 
+    color: #fff;
+    font-family: sans-serif;
+}
+
+/* --- 左侧导航栏样式 --- */
+.left-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80px; 
+    height: 100vh; 
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    box-sizing: border-box;
+    z-index: 100;
+}
+/* ... (其他左侧栏样式保持不变) ... */
+.sidebar-logo-link { margin-bottom: 30px; display: block; }
+.sidebar-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.sidebar-nav { flex-grow: 1; width: 100%; }
+.sidebar-nav ul { list-style: none; padding: 0; margin: 0; width: 100%; }
+.sidebar-nav li { margin-bottom: 20px; }
+.nav-item {
+    display: flex; justify-content: center; align-items: center; width: 50px; 
+    height: 50px; margin: 0 auto; border-radius: 8px; background-color: #333; 
+    transition: background-color 0.3s ease;
+}
+.nav-item:hover, .nav-item.active { background-color: #555; }
+.nav-icon { width: 28px; height: 28px; object-fit: contain; }
+
+/* --- 新增：底部音乐控制 UI --- */
+.sidebar-bottom {
+    padding-top: 20px;
+}
+
+.music-control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* 圆形效果 */
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #222;
+    transition: box-shadow 0.3s;
+}
+
+.music-control-btn:hover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.music-control-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+}
+
+/* 音乐播放时的旋转动画 */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.music-playing img {
+    animation: spin 8s linear infinite; /* 8秒一圈，持续旋转 */
+}
+
+
+/* --- 主内容区域调整 --- */
+.main-content {
+    margin-left: 80px; 
+    width: calc(100% - 80px); 
+    overflow-y: auto; 
+    height: 100vh;
+    padding-right: 0; 
+}
+
+/* --- 随机排版控制面板样式 (半透明效果) --- */
+.control-panel {
+    padding: 10px 120px 0 120px; 
+    text-align: right; 
+}
+
+#shuffle-btn {
+    /* 核心修改：半透明效果 */
+    background-color: rgba(51, 51, 51, 0.7); /* 70% 不透明度的黑色 */
+    color: white;
+    border: 1px solid rgba(85, 85, 85, 0.5); /* 半透明边框 */
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    /* 增加悬停时的反馈 */
+    transition: background-color 0.3s, opacity 0.3s; 
+    margin-bottom: 10px;
+    font-size: 14px;
+    backdrop-filter: blur(2px); /* 增加磨砂玻璃效果 */
+}
+
+#shuffle-btn:hover {
+    background-color: rgba(85, 85, 85, 0.8); /* 悬停时稍微更亮 */
+}
+
+
+/* --- 瀑布流容器样式 --- */
+.masonry-grid {
+    column-count: 4; 
+    column-gap: 10px; 
+    padding: 10px 120px; 
+    width: 100%; 
+}
+
+/* ... (work-item, like-btn, modal 样式保持不变) ... */
+.work-item {
+    break-inside: avoid; 
+    margin-bottom: 10px; 
+    cursor: pointer; 
+    display: block; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    position: relative; 
+}
+
+.work-item:hover {
+    transform: scale(1.03); 
+    z-index: 10; 
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1); 
+}
+
+.item-content {
+    background-color: #1a1a1a; 
+    border-radius: 12px; 
+    overflow: hidden; 
+}
+
+.item-content video {
+    display: block;
+    width: 100%;
+    height: auto; 
+    object-fit: cover;
+}
+
+.like-btn {
+    position: absolute;
+    bottom: 10px; 
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5); 
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 8px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 13px;
+    z-index: 5; 
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.15s;
+}
+
+.work-item:hover .like-btn {
+    opacity: 1; 
+}
+
+.like-btn:hover {
+    background-color: rgba(255, 0, 0, 0.5); 
+    border-color: red;
+}
+
+.modal {
+    display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+    width: 100%; height: 100%; overflow: auto; justify-content: center; 
+    align-items: center; padding-top: 0; background-color: rgba(0, 0, 0, 0.8); 
+    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); 
+}
+
+.modal-content {
+    background-color: #1a1a1a; margin: 20px auto; padding: 20px; border: 1px solid #444;
+    width: 80%; max-width: 1000px; border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; 
+}
+#modal-video { width: 100%; max-height: 70vh; background-color: #000; border-radius: 8px; }
+.modal-info { padding: 15px 0 0; }
+.modal-info h3 { margin-top: 0; color: #fff; }
+
+
+/* --- 手机端自适应 --- */
+@media (max-width: 800px) {
+    /* ... (左侧栏变底部导航等样式保持不变) ... */
+    .left-sidebar {
+        width: 100%; height: 60px; top: auto; bottom: 0; flex-direction: row; 
+        justify-content: space-around; padding: 0;
+    }
+    .sidebar-logo-link { display: none; } 
+    .sidebar-nav ul { display: flex; flex-direction: row; flex-grow: 1; justify-content: space-around; align-items: center; }
+    .sidebar-nav li { margin-bottom: 0; }
+    .sidebar-bottom { display: none; } /* 移动端暂时隐藏底部音乐控制，以保持底部导航简洁 */
+
+    .main-content {
+        width: 100%; margin-left: 0; padding-bottom: 60px; padding-right: 0;
+    }
+    .control-panel { padding: 10px 10px 0 10px; }
+    .masonry-grid { column-count: 2; padding: 10px; } 
+}
+
+@media (max-width: 480px) {
+    .masonry-grid { column-count: 1; } 
+}

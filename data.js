@@ -1,0 +1,23 @@
+const videoData = [
+    { src: "videos/vid_01.mp4", title: "视频作品 #01", description: "这是第一个作品的简短介绍。" },
+    { src: "videos/vid_02.mp4", title: "视频作品 #02", description: "这是第二个作品的简短介绍。" },
+    { src: "videos/vid_03.mp4", title: "视频作品 #03", description: "这是第三个作品的简短介绍。" },
+    { src: "videos/vid_04.mp4", title: "视频作品 #04", description: "这是第四个作品的简短介绍。" },
+    { src: "videos/vid_05.mp4", title: "视频作品 #05", description: "这是第五个作品的简短介绍。" },
+    { src: "videos/vid_06.mp4", title: "视频作品 #06", description: "这是第六个作品的简短介绍。" },
+    { src: "videos/vid_07.mp4", title: "视频作品 #07", description: "这是第七个作品的简短介绍。" },
+    { src: "videos/vid_08.mp4", title: "视频作品 #08", description: "这是第八个作品的简短介绍。" },
+    { src: "videos/vid_09.mp4", title: "视频作品 #09", description: "这是第九个作品的简短介绍。" },
+    { src: "videos/vid_10.mp4", title: "视频作品 #10", description: "这是第十个作品的简短介绍。" },
+    { src: "videos/vid_11.mp4", title: "视频作品 #11", description: "这是第十一个作品的简短介绍。" },
+    { src: "videos/vid_12.mp4", title: "视频作品 #12", description: "这是第十二个作品的简短介绍。" },
+    { src: "videos/vid_13.mp4", title: "视频作品 #13", description: "这是第十三个作品的简短介绍。" },
+    { src: "videos/vid_14.mp4", title: "视频作品 #14", description: "这是第十四个作品的简短介绍。" },
+    { src: "videos/vid_15.mp4", title: "视频作品 #15", description: "这是第十五个作品的简短介绍。" },
+    { src: "videos/vid_16.mp4", title: "视频作品 #16", description: "这是第十六个作品的简短介绍。" },
+    { src: "videos/vid_17.mp4", title: "视频作品 #17", description: "这是第十七个作品的简短介绍。" },
+    { src: "videos/vid_18.mp4", title: "视频作品 #18", description: "这是第十八个作品的简短介绍。" },
+    { src: "videos/vid_19.mp4", title: "视频作品 #19", description: "这是第十九个作品的简短介绍。" },
+    { src: "videos/vid_20.mp4", title: "视频作品 #20", description: "这是第二十个作品的简短介绍。" },
+    { src: "videos/vid_21.mp4", title: "视频作品 #21", description: "这是第二十一个作品的简短介绍。" }
+];
