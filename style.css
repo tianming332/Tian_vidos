@@ -43,12 +43,33 @@ body.dark-background {
 .nav-item:hover, .nav-item.active { background-color: #555; }
 .nav-icon { width: 28px; height: 28px; object-fit: contain; }
 .sidebar-bottom { padding-top: 20px; }
-.music-control-btn { /* ... */ }
-.music-control-btn:hover { /* ... */ }
+/* 修复并添加 music-control-btn 样式 */
+.music-control-btn {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    padding: 0; 
+    border: none;
+    cursor: pointer; 
+    overflow: hidden; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #222; 
+    transition: box-shadow 0.3s;
+}
+.music-control-btn:hover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
 .music-control-btn img { /* ... */ }
 @keyframes spin { /* ... */ }
 .music-playing img { /* ... */ }
 
+/* 新增：播放时的选中发光效果 (通过 JS 添加 .music-playing class) */
+.music-playing {
+    /* 外发光效果：淡淡的白色，使用 box-shadow 实现 */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
+                0 0 5px rgba(255, 255, 255, 0.5) inset;
+}
+/* ... (接您的代码) ... */
 
 /* --- 主内容区域调整 (桌面端) --- */
 .main-content {
@@ -156,4 +177,41 @@ body.dark-background {
 /* 屏幕宽度小于 480px 时使用单列 (保持不变，但上面 800px 的设置更重要) */
 @media (max-width: 480px) {
     .masonry-grid { column-count: 1; } 
+}
+/* --- 新增：音符特效容器和粒子样式 --- */
+
+/* 确保特效容器在按钮上方，且不影响按钮布局 */
+#music-fx-container {
+    position: relative;
+    width: 50px; /* 与按钮同宽 */
+    height: 50px; /* 与按钮同高 */
+}
+
+/* 音符粒子基础样式 */
+.note-particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* 初始位置在按钮中心 */
+    transform: translate(-50%, -50%); 
+    
+    font-size: 18px; /* 音符大小 */
+    color: #fff;
+    opacity: 1;
+    pointer-events: none; /* 确保音符不会阻挡点击事件 */
+    z-index: 101; /* 确保在按钮上方 */
+}
+
+/* 定义音符飘出消散动画 */
+@keyframes flyAndFade {
+    0% {
+        opacity: 1;
+        /* 初始位置在按钮中心 */
+        transform: translate(-50%, -50%) scale(1); 
+    }
+    100% {
+        opacity: 0;
+        /* 向上、向侧面飘出 (使用 CSS 变量接收 JS 传入的随机终点) */
+        transform: translate(var(--end-x), var(--end-y)) scale(0.5); 
+    }
 }

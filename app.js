@@ -5,24 +5,69 @@ const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const body = document.body;
 
-// --- 新增：背景音乐控制元素 ---
+// --- 背景音乐控制元素 ---
 const audio = document.getElementById('background-music');
 const musicToggleBtn = document.getElementById('music-toggle-btn');
 const musicIcon = document.getElementById('music-icon');
+// 新增：音符特效容器
+const musicFxContainer = document.getElementById('music-fx-container'); 
 
 // 音乐文件列表 (请根据您的音乐文件路径修改)
 const musicFiles = [
     'music/bgm_01.mp3',
-    'music/bgm_02.mp3',
+    'music/bgm_02.mp4', // 确保这个路径正确
     'music/bgm_03.mp3'
 ];
 let currentTrackIndex = 0;
 
 
-// --- 背景音乐控制逻辑 (保持不变) ---
+// --- 新增：音符特效逻辑 ---
+
+// 音符字符集 
+const notes = ['♩', '♪', '♫']; 
+
+/**
+ * 创建并播放音符飘散动画
+ */
+function createNoteParticle() {
+    // 确保容器存在 (主要针对移动端，容器可能被 display: none 隐藏)
+    if (!musicFxContainer) return;
+
+    // 随机选择一个音符
+    const noteChar = notes[Math.floor(Math.random() * notes.length)];
+    
+    // 随机计算音符的终点位置 (实现飘散效果)
+    const endX = (Math.random() * 40 - 20) + 'px'; // X轴：-20px 到 +20px
+    const endY = (Math.random() * -50 - 30) + 'px'; // Y轴：向上飘出 -30px 到 -80px
+    const duration = (Math.random() * 0.5 + 1.0) + 's'; // 动画时长 1.0s 到 1.5s
+    const delay = (Math.random() * 0.2) + 's'; // 延迟 0s 到 0.2s
+
+    const particle = document.createElement('div');
+    particle.className = 'note-particle';
+    particle.textContent = noteChar;
+    
+    // 应用 CSS 变量和动画样式
+    particle.style.setProperty('--end-x', endX);
+    particle.style.setProperty('--end-y', endY);
+    particle.style.animation = `flyAndFade ${duration} ease-out ${delay} forwards`;
+
+    musicFxContainer.appendChild(particle);
+
+    // 动画结束后移除元素 (节省内存)
+    particle.addEventListener('animationend', () => {
+        particle.remove();
+    });
+}
+
+
+// --- 背景音乐控制逻辑 (修改：在切换时触发音符) ---
 function toggleMusic() {
     if (audio.paused) {
         audio.play();
+        // **播放时创建 3 个音符飘出**
+        for(let i = 0; i < 3; i++) {
+            createNoteParticle();
+        }
     } else {
         audio.pause();
     }
@@ -37,12 +82,12 @@ function playNextTrack() {
 function updateMusicUI() {
     if (audio.paused) {
         musicIcon.src = 'assets/music_stop.png';
-        musicToggleBtn.classList.remove('music-playing');
+        musicToggleBtn.classList.remove('music-playing'); // 移除发光
         localStorage.setItem('musicPlaybackTime', audio.currentTime);
         localStorage.setItem('musicIsPlaying', 'false');
     } else {
         musicIcon.src = 'assets/music_play.png';
-        musicToggleBtn.classList.add('music-playing');
+        musicToggleBtn.classList.add('music-playing'); // 添加发光
         localStorage.setItem('musicIsPlaying', 'true');
     }
 }
@@ -81,8 +126,7 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
                 source.src = source.dataset.src; 
                 video.load(); 
             } 
-            // **核心修改：移除 video.play()，让视频在瀑布流中保持静止。**
-            // **仅在用户点击打开模态框时才播放。**
+            // 视频在瀑布流中保持静止。
         } else if (video.tagName === 'VIDEO') {
             video.pause(); // 移出视口时暂停，节省资源
         }
@@ -161,7 +205,6 @@ function renderVideos(data) {
         const videoElement = workItem.querySelector('video');
         
         // **核心修改：阻止视频上的触摸和拖动事件冒泡**
-        // 这解决了滑动或长按操作意外触发父级 workItem 的点击事件的问题。
         videoElement.addEventListener('pointerdown', (e) => {
             e.stopPropagation(); 
         });
