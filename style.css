@@ -1,13 +1,12 @@
-/* --- 关键基础修正 (消除滚动条和重叠 Bug 的核心设置) --- */
+/* --- 关键基础修正 --- */
 *, *::before, *::after {
-    box-sizing: border-box; /* 确保 padding/border 不会导致溢出 */
+    box-sizing: border-box;
 }
 
-/* 确保 HTML 和 Body 占满视口，且不出现意外滚动条 */
 html, body {
     height: 100%; 
     width: 100%; 
-    overflow: hidden; /* 仅允许 main-content 滚动 */
+    overflow: hidden; 
     margin: 0;
     padding: 0;
 }
@@ -18,7 +17,7 @@ body.dark-background {
     font-family: sans-serif;
 }
 
-/* --- 左侧导航栏样式 --- */
+/* --- 桌面端左侧导航栏 (Left Sidebar) 样式 --- */
 .left-sidebar {
     position: fixed;
     left: 0;
@@ -33,7 +32,7 @@ body.dark-background {
     box-sizing: border-box;
     z-index: 100;
 }
-/* ... (其他左侧栏样式保持不变) ... */
+
 .sidebar-logo-link { margin-bottom: 30px; display: block; }
 .sidebar-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
 .sidebar-nav { flex-grow: 1; width: 100%; }
@@ -47,48 +46,31 @@ body.dark-background {
 .nav-item:hover, .nav-item.active { background-color: #555; }
 .nav-icon { width: 28px; height: 28px; object-fit: contain; }
 
-/* --- 新增：底部音乐控制 UI --- */
+/* 桌面端音乐控制 UI */
 .sidebar-bottom {
     padding-top: 20px;
 }
-
 .music-control-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%; /* 圆形效果 */
-    padding: 0;
-    border: none;
-    cursor: pointer;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    background-color: #222;
-    transition: box-shadow 0.3s;
+    width: 50px; height: 50px; border-radius: 50%; padding: 0; border: none;
+    cursor: pointer; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #222; transition: box-shadow 0.3s;
 }
-
 .music-control-btn:hover {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
-
 .music-control-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s;
+    width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s;
 }
-
-/* 音乐播放时的旋转动画 */
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
-
 .music-playing img {
-    animation: spin 8s linear infinite; /* 8秒一圈，持续旋转 */
+    animation: spin 8s linear infinite;
 }
 
 
-/* --- 主内容区域调整 --- */
+/* --- 主内容区域调整 (Desktop) --- */
 .main-content {
     margin-left: 80px; 
     width: calc(100% - 80px); 
@@ -97,33 +79,32 @@ body.dark-background {
     padding-right: 0; 
 }
 
-/* --- 随机排版控制面板样式 (半透明效果) --- */
+/* --- 随机排版控制面板样式 (Desktop) --- */
 .control-panel {
     padding: 10px 120px 0 120px; 
     text-align: right; 
+    position: relative; /* 确保它在内容之上 */
+    z-index: 50;
 }
 
 #shuffle-btn {
-    /* 核心修改：半透明效果 */
-    background-color: rgba(51, 51, 51, 0.7); /* 70% 不透明度的黑色 */
+    background-color: rgba(51, 51, 51, 0.7);
     color: white;
-    border: 1px solid rgba(85, 85, 85, 0.5); /* 半透明边框 */
+    border: 1px solid rgba(85, 85, 85, 0.5);
     padding: 8px 15px;
     border-radius: 6px;
     cursor: pointer;
-    /* 增加悬停时的反馈 */
     transition: background-color 0.3s, opacity 0.3s; 
     margin-bottom: 10px;
     font-size: 14px;
-    backdrop-filter: blur(2px); /* 增加磨砂玻璃效果 */
+    backdrop-filter: blur(2px);
 }
-
 #shuffle-btn:hover {
-    background-color: rgba(85, 85, 85, 0.8); /* 悬停时稍微更亮 */
+    background-color: rgba(85, 85, 85, 0.8);
 }
 
 
-/* --- 瀑布流容器样式 --- */
+/* --- 瀑布流容器样式 (Desktop) --- */
 .masonry-grid {
     column-count: 4; 
     column-gap: 10px; 
@@ -131,7 +112,7 @@ body.dark-background {
     width: 100%; 
 }
 
-/* ... (work-item, like-btn, modal 样式保持不变) ... */
+/* --- 作品项和模态框样式保持不变 --- */
 .work-item {
     break-inside: avoid; 
     margin-bottom: 10px; 
@@ -202,25 +183,109 @@ body.dark-background {
 .modal-info h3 { margin-top: 0; color: #fff; }
 
 
-/* --- 手机端自适应 --- */
+/* --- 📱 手机端自适应 (Max-width 800px) --- */
 @media (max-width: 800px) {
-    /* ... (左侧栏变底部导航等样式保持不变) ... */
-    .left-sidebar {
-        width: 100%; height: 60px; top: auto; bottom: 0; flex-direction: row; 
-        justify-content: space-around; padding: 0;
-    }
-    .sidebar-logo-link { display: none; } 
-    .sidebar-nav ul { display: flex; flex-direction: row; flex-grow: 1; justify-content: space-around; align-items: center; }
-    .sidebar-nav li { margin-bottom: 0; }
-    .sidebar-bottom { display: none; } /* 移动端暂时隐藏底部音乐控制，以保持底部导航简洁 */
-
+    
+    /* 1. 主内容区域 (为顶部/底部导航栏留出空间) */
     .main-content {
-        width: 100%; margin-left: 0; padding-bottom: 60px; padding-right: 0;
+        margin-left: 0; 
+        width: 100%; 
+        padding-top: 50px; /* 顶部排版按钮高度 */
+        padding-bottom: 60px; /* 底部导航栏高度 */
     }
-    .control-panel { padding: 10px 10px 0 10px; }
-    .masonry-grid { column-count: 2; padding: 10px; } 
-}
+    
+    /* 2. 底部导航栏容器 (Mobile Bottom Navbar) */
+    #mobile-navbar-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px; /* 底部导航栏高度 */
+        z-index: 200;
+        background-color: #1a1a1a;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+    }
 
-@media (max-width: 480px) {
-    .masonry-grid { column-count: 1; } 
+    /* 3. 侧边栏转为底部导航栏样式 */
+    .left-sidebar {
+        position: static; /* 取消 fixed 定位，让父容器控制 */
+        width: 100%; 
+        height: 100%; 
+        flex-direction: row; 
+        justify-content: space-around; 
+        padding: 0;
+        background-color: transparent; /* 容器已设置背景 */
+    }
+
+    /* 隐藏 Logo 和音乐开关 (只保留导航按钮) */
+    .sidebar-logo-link, 
+    .sidebar-bottom { 
+        display: none; 
+    }
+    
+    /* 导航菜单样式 */
+    .sidebar-nav { flex-grow: 1; }
+    .sidebar-nav ul { 
+        display: flex; 
+        flex-direction: row; 
+        justify-content: space-around; 
+        align-items: center; 
+        height: 100%;
+    }
+    .sidebar-nav li { margin-bottom: 0; }
+    
+    /* 导航项图标大小调整 */
+    .nav-item {
+        width: 40px; 
+        height: 40px; 
+        background-color: transparent; /* 底部导航栏背景已设置 */
+    }
+    .nav-item:hover, .nav-item.active { 
+        background-color: #333; /* 选中或悬停时显示背景 */
+        border-radius: 50%; /* 圆形强调 */
+    }
+
+
+    /* 4. 随机排版按钮 (Mobile Top Control) */
+    .control-panel {
+        position: fixed; /* 固定在顶部 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 8px 15px; 
+        text-align: right; 
+        background-color: rgba(0, 0, 0, 0.8); /* 半透明黑色背景 */
+        z-index: 150;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+    }
+    
+    #shuffle-btn {
+        background-color: rgba(51, 51, 51, 0.9); /* 更小的半透明按钮 */
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 13px;
+        border: none;
+    }
+
+
+    /* 5. 瀑布流布局优化 (Mobile Masonry) */
+    .masonry-grid { 
+        column-count: 2; /* 手机端使用两列 */
+        column-gap: 8px; /* 间隙更小 */
+        padding: 8px; 
+    }
+    .work-item {
+        margin-bottom: 8px; /* 间隙更小 */
+    }
+
+    /* 6. 模态框优化 (确保视频适应屏幕) */
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 10px;
+    }
+    #modal-video { 
+        max-height: 85vh; /* 增加视频高度占比 */
+    }
 }
