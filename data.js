@@ -29,4 +29,7 @@ const videoData = [
     { src: "videos/vid_28.mp4", title: "深夜咖啡店外景 #28", description: "暖光从小店溢出，给夜晚增添一丝温度。" },  
     { src: "videos/vid_29.mp4", title: "港口夕阳 #29", description: "迪士尼乐园唯美的欧洲景色。" },  
     { src: "videos/vid_30.mp4", title: "布偶堆的温馨角落 #30", description: "堆在一起的小布偶带来满满的童真和治愈。" },      
+    { src: "videos/vid_31.mp4", title: "活过来的布偶娃娃 #31", description: "美术展里的布偶娃娃。" },    
+    { src: "videos/vid_32.mp4", title: "视觉障碍辅助玩偶 #32", description: "利用AI技术赋予它们生命。" },     
+    { src: "videos/vid_33.mp4", title: "布偶娃娃狂欢 #33", description: "美术展里的布偶娃娃,利用AI技术赋予它们生命。" },     
 ];
