@@ -5,12 +5,12 @@ const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const body = document.body;
 
-// --- 背景音乐控制元素 ---
+// --- 新增：背景音乐控制元素 ---
 const audio = document.getElementById('background-music');
 const musicToggleBtn = document.getElementById('music-toggle-btn');
 const musicIcon = document.getElementById('music-icon');
 
-// 音乐文件列表 (保持不变)
+// 音乐文件列表 (请根据您的音乐文件路径修改)
 const musicFiles = [
     'music/bgm_01.mp3',
     'music/bgm_02.mp3',
@@ -38,13 +38,11 @@ function updateMusicUI() {
     if (audio.paused) {
         musicIcon.src = 'assets/music_stop.png';
         musicToggleBtn.classList.remove('music-playing');
-        
         localStorage.setItem('musicPlaybackTime', audio.currentTime);
         localStorage.setItem('musicIsPlaying', 'false');
     } else {
         musicIcon.src = 'assets/music_play.png';
         musicToggleBtn.classList.add('music-playing');
-        
         localStorage.setItem('musicIsPlaying', 'true');
     }
 }
@@ -71,7 +69,7 @@ function initMusicPlayer() {
 }
 
 
-// --- 性能优化：懒加载观察者 (修改：仅加载，不再自动播放) ---
+// --- 性能优化：懒加载观察者 (修改：移除自动播放) ---
 const videoObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         const video = entry.target; 
@@ -82,9 +80,9 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
             if (source.src === "") {
                 source.src = source.dataset.src; 
                 video.load(); 
-                // 移除 video.play()，让它保持暂停状态，仅在点击后播放
             } 
-            // 移除 video.play() 逻辑，防止自动播放
+            // **核心修改：移除 video.play()，让视频在瀑布流中保持静止。**
+            // **仅在用户点击打开模态框时才播放。**
         } else if (video.tagName === 'VIDEO') {
             video.pause(); // 移出视口时暂停，节省资源
         }
@@ -92,7 +90,7 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
 }, { rootMargin: '0px 0px 100px 0px' });
 
 
-// --- 点赞功能函数 (保持不变) ---
+// --- 点赞/排序功能 (保持不变) ---
 function getLikes(src) {
     const likes = JSON.parse(localStorage.getItem('videoLikes')) || {};
     return likes[src] || 0;
@@ -115,7 +113,6 @@ function toggleLike(event, src) {
     }, 150);
 }
 
-// --- 随机排序功能函数 (保持不变) ---
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -123,7 +120,7 @@ function shuffleArray(array) {
     }
 }
 
-// --- 主要渲染逻辑 (修改：阻止视频内部拖动误触) ---
+// --- 主要渲染逻辑 (修改：阻止触摸事件冒泡) ---
 function renderVideos(data) {
     const container = document.getElementById('masonry-container');
     
@@ -163,9 +160,9 @@ function renderVideos(data) {
         
         const videoElement = workItem.querySelector('video');
         
-        // **新增：阻止视频拖动和触摸事件冒泡，解决误触问题**
+        // **核心修改：阻止视频上的触摸和拖动事件冒泡**
+        // 这解决了滑动或长按操作意外触发父级 workItem 的点击事件的问题。
         videoElement.addEventListener('pointerdown', (e) => {
-            // 阻止向下传递给父级 work-item 的点击事件
             e.stopPropagation(); 
         });
         videoElement.addEventListener('touchstart', (e) => {
@@ -214,7 +211,7 @@ function openModal(videoSrc, title, description) {
     modalDescription.textContent = description;
     modal.style.display = 'flex';
     modalVideo.currentTime = 0; 
-    modalVideo.play();
+    modalVideo.play(); // **模态框中的视频才播放**
     body.style.overflow = 'hidden';
 }
 
