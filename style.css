@@ -44,7 +44,7 @@ body.dark-background {
 .nav-icon { width: 28px; height: 28px; object-fit: contain; }
 .sidebar-bottom { padding-top: 20px; }
 
-/* 修复并添加 music-control-btn 样式 */
+/* 音乐控制按钮样式 */
 .music-control-btn {
     width: 50px; 
     height: 50px; 
@@ -60,7 +60,6 @@ body.dark-background {
 .music-control-btn:hover {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
-/* 这里是旋转动画相关的样式，需要确保它们完整 */
 .music-control-btn img { 
     width: 100%; 
     height: 100%; 
@@ -74,9 +73,8 @@ body.dark-background {
     animation: spin 3s linear infinite; 
 }
 
-/* 新增：播放时的选中发光效果 (通过 JS 添加 .music-playing class) */
+/* 播放时的选中发光效果 */
 .music-playing {
-    /* 外发光效果：淡淡的白色，使用 box-shadow 实现 */
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
                 0 0 5px rgba(255, 255, 255, 0.5) inset;
 }
@@ -92,7 +90,6 @@ body.dark-background {
 
 /* --- 随机排版控制面板样式 (桌面端) --- */
 .control-panel {
-    /* 桌面端内边距保持宽松 */
     padding: 10px 120px 0 120px; 
     text-align: right; 
 }
@@ -108,7 +105,6 @@ body.dark-background {
 .masonry-grid {
     column-count: 4; 
     column-gap: 10px; 
-    /* 桌面端内边距保持宽松 */
     padding: 10px 120px; 
     width: 100%; 
 }
@@ -118,14 +114,15 @@ body.dark-background {
 .work-item:hover { transform: scale(1.03); z-index: 10; box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1); }
 .item-content { background-color: #1a1a1a; border-radius: 12px; overflow: hidden; }
 .item-content video { display: block; width: 100%; height: auto; object-fit: cover; }
-.like-btn { /* ... */ opacity: 0; transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.15s; }
+.like-btn { position: absolute; bottom: 10px; right: 10px; padding: 5px 10px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.5); background-color: rgba(0, 0, 0, 0.5); color: white; cursor: pointer; opacity: 0; transition: opacity 0.3s ease, background-color 0.3s ease, transform 0.15s; }
 .work-item:hover .like-btn { opacity: 1; }
 .like-btn:hover { background-color: rgba(255, 0, 0, 0.5); border-color: red; }
-.modal { /* ... */ }
-.modal-content { /* ... */ }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; /* 默认隐藏 */ background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { background-color: #1a1a1a; margin: auto; padding: 20px; border: 1px solid #444; width: 80%; max-width: 1000px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; }
 #modal-video { width: 100%; max-height: 70vh; background-color: #000; border-radius: 8px; }
 .modal-info { padding: 15px 0 0; }
 .modal-info h3 { margin-top: 0; color: #fff; }
+.close-btn { background-color: #555; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
 
 
 /* --- 📱 手机端自适应 (Max-width 800px) --- */
@@ -134,19 +131,19 @@ body.dark-background {
     /* 布局优化 1: 底部导航栏 */
     .left-sidebar {
         width: 100%; height: 60px; top: auto; bottom: 0; flex-direction: row; 
-        justify-content: space-around; padding: 0; background-color: #1a1a1a; /* 确保背景色 */
-        position: fixed; /* 重新固定在底部 */
+        justify-content: space-around; padding: 0; background-color: #1a1a1a; 
+        position: fixed; 
     }
     .sidebar-logo-link { display: none; } 
     .sidebar-nav ul { display: flex; flex-direction: row; flex-grow: 1; justify-content: space-around; align-items: center; height: 100%; }
     .sidebar-nav li { margin-bottom: 0; }
-    .sidebar-bottom { display: none; } /* 移动端隐藏底部音乐按钮 */
+    .sidebar-bottom { display: none; } /* 移动端隐藏底部音乐按钮 (但结构仍存在) */
 
     /* 布局优化 2: 主内容区域 (为顶部/底部导航栏留出空间) */
     .main-content {
         width: 100%; margin-left: 0; 
-        padding-top: 50px; /* 顶部控制面板高度 */
-        padding-bottom: 60px; /* 底部导航栏高度 */
+        padding-top: 50px; 
+        padding-bottom: 60px; 
         padding-right: 0;
     }
     
@@ -156,7 +153,7 @@ body.dark-background {
         top: 0; 
         left: 0; 
         width: 100%;
-        padding: 8px 10px; /* 减少内边距 */
+        padding: 8px 10px; 
         text-align: right; 
         background-color: rgba(0, 0, 0, 0.8); 
         z-index: 150;
@@ -166,15 +163,15 @@ body.dark-background {
     /* **布局优化 4: 瀑布流紧凑度调整** */
     .masonry-grid { 
         column-count: 2; /* 手机端两列 */
-        column-gap: 5px; /* **减小列间隙** */
-        padding: 5px; /* **减小整体内边距** */
+        column-gap: 5px; 
+        padding: 5px; 
     }
     .work-item {
-        margin-bottom: 5px; /* **减小行间隙** */
-        border-radius: 8px; /* 减小圆角 */
+        margin-bottom: 5px; 
+        border-radius: 8px; 
     }
     .item-content {
-        border-radius: 8px; /* 减小圆角 */
+        border-radius: 8px; 
     }
     
     /* 模态框优化 */
@@ -188,12 +185,12 @@ body.dark-background {
     }
 }
 
-/* 屏幕宽度小于 480px 时使用单列 (保持不变，但上面 800px 的设置更重要) */
+/* 屏幕宽度小于 480px 时使用单列 */
 @media (max-width: 480px) {
     .masonry-grid { column-count: 1; } 
 }
 
-/* --- 新增：音符特效容器和粒子样式 --- */
+/* --- 音符特效容器和粒子样式 --- */
 
 /* 确保特效容器在按钮上方，且不影响按钮布局 */
 #music-fx-container {

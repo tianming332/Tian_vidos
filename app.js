@@ -9,7 +9,7 @@ const body = document.body;
 const audio = document.getElementById('background-music');
 const musicToggleBtn = document.getElementById('music-toggle-btn');
 const musicIcon = document.getElementById('music-icon');
-// 新增：音符特效容器
+// 音符特效容器
 const musicFxContainer = document.getElementById('music-fx-container'); 
 
 // 音乐文件列表 (请根据您的音乐文件路径修改)
@@ -30,10 +30,8 @@ const notes = ['♩', '♪', '♫'];
  * 创建并播放音符飘散动画
  */
 function createNoteParticle() {
-    // 确保容器存在 (主要针对移动端，容器可能被 display: none 隐藏)
     if (!musicFxContainer) return;
 
-    // 随机选择一个音符
     const noteChar = notes[Math.floor(Math.random() * notes.length)];
     
     // 随机计算音符的终点位置 (实现飘散效果)
@@ -114,7 +112,7 @@ function initMusicPlayer() {
 }
 
 
-// --- 性能优化：懒加载观察者 (修改：移除自动播放) ---
+// --- 性能优化：懒加载观察者 ---
 const videoObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         const video = entry.target; 
@@ -126,7 +124,7 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
                 source.src = source.dataset.src; 
                 video.load(); 
             } 
-            // 视频在瀑布流中保持静止。
+            // 确保视频静止（不自动播放）
         } else if (video.tagName === 'VIDEO') {
             video.pause(); // 移出视口时暂停，节省资源
         }
@@ -164,7 +162,7 @@ function shuffleArray(array) {
     }
 }
 
-// --- 主要渲染逻辑 (修改：阻止触摸事件冒泡) ---
+// --- 主要渲染逻辑 (阻止触摸事件冒泡) ---
 function renderVideos(data) {
     const container = document.getElementById('masonry-container');
     
@@ -204,7 +202,7 @@ function renderVideos(data) {
         
         const videoElement = workItem.querySelector('video');
         
-        // **核心修改：阻止视频上的触摸和拖动事件冒泡**
+        // 阻止视频上的触摸和拖动事件冒泡
         videoElement.addEventListener('pointerdown', (e) => {
             e.stopPropagation(); 
         });
@@ -221,9 +219,8 @@ function renderVideos(data) {
 }
 
 
-// --- 初始加载和事件绑定 (保持不变) ---
+// --- 初始加载和事件绑定 ---
 document.addEventListener('DOMContentLoaded', function() {
-    // 确保 videoData 全局变量已加载 (来自 data.js)
     if (typeof videoData === 'undefined' || videoData.length === 0) {
         console.error("视频数据未找到或为空。请检查 data.js 文件是否正确引入。");
         return;
@@ -244,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// --- 模态框交互函数 (保持不变) ---
+// --- 模态框交互函数 ---
 function openModal(videoSrc, title, description) {
     if (!audio.paused) {
         audio.pause();
