@@ -1,22 +1,107 @@
-[
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_01.mp4", title: "初号机雕塑合影 #01", description: "主题公园中巨大的初号机合影。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_02.mp4", title: "新宿街头 #02", description: "新宿街头来来往往的人。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_03.mp4", title: "新宿街头 #03", description: "新宿街头来来往往的车。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_04.mp4", title: "港区水族馆 #04", description: "小鱼在蓝色灯光下穿梭，宁静梦幻。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_05.mp4", title: "早春的东京塔 #05", description: "无叶的枝枒映衬着东京塔的静美。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_06.mp4", title: "新宿街头 #06", description: "小灯笼点亮了巷子烟火氛围。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_07.mp4", title: "从高尾山看富士山 #07", description: "远远望着白雪覆盖的富士山。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_08.mp4", title: "三眼外星人的头 #08", description: "在迪士尼乐园一口吃掉三眼外星人的头😰。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_09.mp4", title: "秋天的高尾山 #09", description: "金黄树叶与屋檐的线条交织成温暖的秋景。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_10.mp4", title: "4点半的小樽 #10", description: "海浪与独坐的人影构成宁静的画面。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_11.mp4", title: "新宿的红绿灯 #11", description: "轰隆隆的的列车声和吵杂的人群。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_12.mp4", title: "厦门岛的阳光 #12", description: "透进门缝的光照亮了安静的房间。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_13.mp4", title: "雷门前的中华街 #13", description: "名古屋乐高主题公园里雷门前舞着龙的中国人。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_14.mp4", title: "圣诞树广场夜景 #14", description: "迪士尼乐园明亮的圣诞树点亮了节日氛围。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_15.mp4", title: "北海道之行 #15", description: "电车与列车与城市摩天轮画面拼贴成独特视觉。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_16.mp4", title: "乐高浅草寺 #16", description: "名古屋乐高主题公园里的浅草寺。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_17.mp4", title: "水族馆珊瑚微景观 #17", description: "柔软的珊瑚在蓝光下轻轻摇曳。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_18.mp4", title: "兔子玩偶沐光 #18", description: "小兔子玩偶晒太阳。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_19.mp4", title: "寺庙屋檐的钟与天空 #19", description: "古建筑屋檐在蓝天之下钟声围绕格外静谧。" },
-{ src: "https://tianming332.github.io/Tian-Video-Assets/videos/vid_20.mp4", title: "言叶之庭 #20", description: "新宿御宛里一颗垂树的倒影在平静的水面上轻轻晃动。。" }, "title": "视频作品 #20", "description": "这是第一批视频的描述。" }
-]
+{
+  "title": "视频作品 #20",
+  "description": "这是第一批视频的描述。",
+  "videos": [
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_01.mp4",
+      "title": "初号机雕塑合影 #01",
+      "description": "主题公园中巨大的初号机合影。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_02.mp4",
+      "title": "新宿街头 #02",
+      "description": "新宿街头来来往往的人。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_03.mp4",
+      "title": "新宿街头 #03",
+      "description": "新宿街头来来往往的车。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_04.mp4",
+      "title": "港区水族馆 #04",
+      "description": "小鱼在蓝色灯光下穿梭，宁静梦幻。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_05.mp4",
+      "title": "早春的东京塔 #05",
+      "description": "无叶的枝枒映衬着东京塔的静美。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_06.mp4",
+      "title": "新宿街头 #06",
+      "description": "小灯笼点亮了巷子烟火氛围。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_07.mp4",
+      "title": "从高尾山看富士山 #07",
+      "description": "远远望着白雪覆盖的富士山。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_08.mp4",
+      "title": "三眼外星人的头 #08",
+      "description": "在迪士尼乐园一口吃掉三眼外星人的头😰。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_09.mp4",
+      "title": "秋天的高尾山 #09",
+      "description": "金黄树叶与屋檐的线条交织成温暖的秋景。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_10.mp4",
+      "title": "4点半的小樽 #10",
+      "description": "海浪与独坐的人影构成宁静的画面。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_11.mp4",
+      "title": "新宿的红绿灯 #11",
+      "description": "轰隆隆的的列车声和吵杂的人群。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_12.mp4",
+      "title": "厦门岛的阳光 #12",
+      "description": "透进门缝的光照亮了安静的房间。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_13.mp4",
+      "title": "雷门前的中华街 #13",
+      "description": "名古屋乐高主题公园里雷门前舞着龙的中国人。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_14.mp4",
+      "title": "圣诞树广场夜景 #14",
+      "description": "迪士尼乐园明亮的圣诞树点亮了节日氛围。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_15.mp4",
+      "title": "北海道之行 #15",
+      "description": "电车与列车与城市摩天轮画面拼贴成独特视觉。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_16.mp4",
+      "title": "乐高浅草寺 #16",
+      "description": "名古屋乐高主题公园里的浅草寺。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_17.mp4",
+      "title": "水族馆珊瑚微景观 #17",
+      "description": "柔软的珊瑚在蓝光下轻轻摇曳。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_18.mp4",
+      "title": "兔子玩偶沐光 #18",
+      "description": "小兔子玩偶晒太阳。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_19.mp4",
+      "title": "寺庙屋檐的钟与天空 #19",
+      "description": "古建筑屋檐在蓝天之下钟声围绕格外静谧。"
+    },
+    {
+      "src": "https://tianming332.github.io/Tian-Video-Assets/videos/vid_20.mp4",
+      "title": "言叶之庭 #20",
+      "description": "新宿御宛里一颗垂树的倒影在平静的水面上轻轻晃动。。"
+    }
+  ]
+}
+
