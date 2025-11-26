@@ -11,28 +11,35 @@ const musicToggleBtn = document.getElementById('music-toggle-btn');
 const musicIcon = document.getElementById('music-icon');
 
 // 分页 / 性能控制
-const PAGE_SIZE = 10;   // 每次加载 10 个
-const MAX_VIDEOS = 50;  // 页面上最多保留 50 个视频
+const PAGE_SIZE = 20;   // 每次加载 20 个
+const MAX_VIDEOS = 80;  // 页面上最多保留 80 个视频
 
 let nextVideoIndex = 0;     // 下一次从 videoData 取的下标
 let mainContentEl = null;   // 滚动容器
 let videoObserver = null;   // IntersectionObserver
 let isLoadingMore = false;  // 避免重复触发加载
 
-// 背景音乐播放列表（按需要修改）
+// 背景音乐播放列表
 const musicFiles = [
-    'music/bgm_01.mp3',
-    'music/bgm_02.mp3',
-    'music/bgm_03.mp3'
+    'https://tianming332.github.io/Tian_vidos/music/bgm_01.mp3',
+    'https://tianming332.github.io/Tian_vidos/music/bgm_02.mp3',
+    'https://tianming332.github.io/Tian_vidos/music/bgm_03.mp3'
 ];
 let currentTrackIndex = 0;
+
+// 背景音乐体积控制 & 特效状态
+let baseMusicVolume = 0.6;    // 0~1
+let isModalOpen = false;      // 是否打开了视频模态框
+let musicNoteTimer = null;    // 小音符定时器
 
 
 // ================= 背景音乐逻辑 =================
 function toggleMusic() {
     if (!audio) return;
     if (audio.paused) {
-        audio.play().catch(() => {});
+        audio.play().catch(err => {
+            console.log('背景音乐播放失败:', err);
+        });
     } else {
         audio.pause();
     }
@@ -42,7 +49,42 @@ function playNextTrack() {
     if (!audio || musicFiles.length === 0) return;
     currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
     audio.src = musicFiles[currentTrackIndex];
-    audio.play().catch(() => {});
+    audio.play().catch(err => {
+        console.log('自动播放下一首失败:', err);
+    });
+}
+
+// 小音符特效
+function spawnMusicNote() {
+    const container = document.getElementById('music-note-container');
+    if (!container) return;
+
+    const note = document.createElement('span');
+    note.className = 'music-note';
+
+    const symbols = ['♪', '♫', '♬'];
+    note.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+    const offset = -20 + Math.random() * 40; // -20% ~ +20%
+    note.style.left = (50 + offset) + '%';
+    note.style.fontSize = (11 + Math.random() * 5) + 'px';
+
+    container.appendChild(note);
+    setTimeout(() => {
+        note.remove();
+    }, 1700);
+}
+
+function startMusicNotes() {
+    if (musicNoteTimer !== null) return;
+    musicNoteTimer = setInterval(spawnMusicNote, 700);
+}
+
+function stopMusicNotes() {
+    if (musicNoteTimer !== null) {
+        clearInterval(musicNoteTimer);
+        musicNoteTimer = null;
+    }
 }
 
 function updateMusicUI() {
@@ -51,11 +93,17 @@ function updateMusicUI() {
     if (audio.paused) {
         musicIcon.src = 'assets/music_stop.png';
         musicToggleBtn.classList.remove('music-playing');
+        musicToggleBtn.classList.remove('music-active');
+        stopMusicNotes();
+
         localStorage.setItem('musicPlaybackTime', audio.currentTime || 0);
         localStorage.setItem('musicIsPlaying', 'false');
     } else {
         musicIcon.src = 'assets/music_play.png';
         musicToggleBtn.classList.add('music-playing');
+        musicToggleBtn.classList.add('music-active');
+        startMusicNotes();
+
         localStorage.setItem('musicIsPlaying', 'true');
     }
 }
@@ -63,26 +111,74 @@ function updateMusicUI() {
 function initMusicPlayer() {
     if (!audio || !musicToggleBtn || musicFiles.length === 0) return;
 
-    musicToggleBtn.addEventListener('click', toggleMusic);
-    audio.addEventListener('ended', playNextTrack);
-    audio.addEventListener('play', updateMusicUI);
-    audio.addEventListener('pause', updateMusicUI);
+    // 恢复/初始化音量
+    const volumeSlider = document.getElementById('music-volume');
+    const savedVol = parseFloat(localStorage.getItem('musicVolume') || 'NaN');
+    if (!isNaN(savedVol) && savedVol >= 0 && savedVol <= 1) {
+        baseMusicVolume = savedVol;
+    }
 
-    const isPlaying = localStorage.getItem('musicIsPlaying') === 'true';
-    const savedTime = parseFloat(localStorage.getItem('musicPlaybackTime') || '0');
+    if (volumeSlider) {
+        if (isNaN(savedVol)) {
+            const sliderVal = parseInt(volumeSlider.value, 10);
+            if (!isNaN(sliderVal)) {
+                baseMusicVolume = sliderVal / 100;
+            }
+        } else {
+            volumeSlider.value = Math.round(baseMusicVolume * 100);
+        }
 
+        volumeSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value, 10);
+            const norm = isNaN(value) ? 0.6 : value / 100;
+            baseMusicVolume = Math.max(0, Math.min(1, norm));
+            const effectiveVolume = isModalOpen ? baseMusicVolume * 0.5 : baseMusicVolume;
+            audio.volume = effectiveVolume;
+            localStorage.setItem('musicVolume', String(baseMusicVolume));
+        });
+    }
+
+    // 初始音量
+    audio.volume = baseMusicVolume;
+
+    // 选择第一首音乐
     currentTrackIndex = 0;
     audio.src = musicFiles[currentTrackIndex];
 
-    if (!isNaN(savedTime) && savedTime > 0) {
-        audio.currentTime = savedTime;
-    }
+    // 绑定音乐控制按钮
+    musicToggleBtn.addEventListener('click', toggleMusic);
 
-    if (isPlaying) {
-        audio.play().catch(() => {});
-    }
+    // 播放结束自动下一首
+    audio.addEventListener('ended', playNextTrack);
 
-    updateMusicUI();
+    // 播放/暂停时更新 UI
+    audio.addEventListener('play', updateMusicUI);
+    audio.addEventListener('pause', updateMusicUI);
+
+    // 自动播放策略：
+    // - 默认视为需要播放（包括第一次访问）
+    // - 如果用户上次明确点了“停止”，则不自动播放
+    const savedFlag = localStorage.getItem('musicIsPlaying');
+    const shouldPlay = savedFlag === 'false' ? false : true;
+
+    if (shouldPlay) {
+        audio.play().then(() => {
+            // 成功自动播放，UI 会在 play 事件中更新
+        }).catch(err => {
+            console.log('自动播放被浏览器阻止:', err);
+            localStorage.setItem('musicIsPlaying', 'false');
+            updateMusicUI();
+
+            // 退一步：首次点击页面时再尝试播放一次
+            const resume = () => {
+                audio.play().catch(() => {});
+                window.removeEventListener('click', resume);
+            };
+            window.addEventListener('click', resume, { once: true });
+        });
+    } else {
+        updateMusicUI();
+    }
 }
 
 
@@ -241,10 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initMusicPlayer();
     initVideoObserver();
 
-    // 1. 初次加载 20 个视频
+    // 初次加载 20 个视频
     loadMoreVideos(PAGE_SIZE);
 
-    // 2. 按钮：一键加载更多视频
+    // 按钮：一键加载更多视频
     const loadMoreBtn = document.getElementById('shuffle-btn');
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', () => {
@@ -252,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. 滚动到底部自动加载更多
+    // 滚动到底部自动加载更多
     if (mainContentEl) {
         mainContentEl.addEventListener('scroll', handleScroll);
     }
@@ -263,8 +359,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function openModal(videoSrc, title, description) {
     if (!modal || !modalVideo) return;
 
-    if (audio && !audio.paused) {
-        audio.pause();
+    // 打开模态框时，不再暂停背景音乐，而是把音量降到 50%
+    isModalOpen = true;
+    if (audio) {
+        const effectiveVolume = baseMusicVolume * 0.5;
+        audio.volume = effectiveVolume;
     }
 
     modalVideo.src = videoSrc;
@@ -273,7 +372,9 @@ function openModal(videoSrc, title, description) {
 
     modal.style.display = 'flex';
     modalVideo.currentTime = 0;
-    modalVideo.play().catch(() => {});
+    modalVideo.play().catch(err => {
+        console.log('播放视频失败:', err);
+    });
     body.style.overflow = 'hidden';
 }
 
@@ -284,8 +385,10 @@ function closeModal() {
     modalVideo.pause();
     body.style.overflow = 'auto';
 
-    if (audio && localStorage.getItem('musicIsPlaying') === 'true') {
-        audio.play().catch(() => {});
+    // 恢复背景音乐音量到基础音量
+    isModalOpen = false;
+    if (audio) {
+        audio.volume = baseMusicVolume;
     }
 }
 

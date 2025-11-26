@@ -12,7 +12,7 @@
 </head>
 <body class="dark-background">
 
-   <aside class="left-sidebar">
+<aside class="left-sidebar">
     <a href="https://tianming332.github.io/TianJiangming-s-portfolio/" class="sidebar-logo-link" title="返回个人主页">
         <img src="assets/TIAN_logo.png" alt="个人主页Logo" class="sidebar-logo">
     </a>
@@ -23,14 +23,27 @@
                     <img src="assets/photo_icon.png" alt="照片页面" class="nav-icon">
                 </a>
             </li>
-            </ul>
+        </ul>
     </nav>
+
     <div class="sidebar-bottom">
-        <button id="music-toggle-btn" class="music-control-btn" title="背景音乐开关">
-            <img id="music-icon" src="assets/music_stop.png" alt="音乐开关">
-        </button>
+        <div class="music-ui-wrapper">
+            <button id="music-toggle-btn" class="music-control-btn" title="背景音乐开关">
+                <img id="music-icon" src="assets/music_stop.png" alt="音乐开关">
+            </button>
+            <div id="music-note-container" class="music-note-container"></div>
+        </div>
+        <input
+            type="range"
+            id="music-volume"
+            min="0"
+            max="100"
+            value="60"
+            title="背景音乐音量"
+        >
     </div>
 </aside>
+
 
     <main class="main-content">
         <div class="control-panel">
