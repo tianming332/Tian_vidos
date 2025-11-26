@@ -12,33 +12,38 @@
 </head>
 <body class="dark-background">
 
-   <aside class="left-sidebar">
-    <a href="https://tianming332.github.io/TianJiangming-s-portfolio/" class="sidebar-logo-link" title="返回个人主页">
-        <img src="assets/TIAN_logo.png" alt="个人主页Logo" class="sidebar-logo">
-    </a>
-    <nav class="sidebar-nav">
-        <ul>
-            <li>
-                <a href="#" class="nav-item active" title="照片页面">
-                    <img src="assets/photo_icon.png" alt="照片页面" class="nav-icon">
-                </a>
-            </li>
-            </ul>
-    </nav>
-    <div class="sidebar-bottom">
-        <button id="music-toggle-btn" class="music-control-btn" title="背景音乐开关">
-            <img id="music-icon" src="assets/music_stop.png" alt="音乐开关">
-        </button>
-    </div>
-</aside>
+    <aside class="left-sidebar">
+        <a href="https://tianming332.github.io/TianJiangming-s-portfolio/" class="sidebar-logo-link" title="返回个人主页">
+            <img src="assets/TIAN_logo.png" alt="个人主页Logo" class="sidebar-logo">
+        </a>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="#" class="nav-item active" title="照片页面">
+                        <img src="assets/photo_icon.png" alt="照片页面" class="nav-icon">
+                    </a>
+                </li>
+                </ul>
+        </nav>
+        <div class="sidebar-bottom">
+            <div id="music-fx-container"></div>
+            <button id="music-toggle-btn" class="music-control-btn" title="背景音乐开关">
+                <img id="music-icon" src="assets/music_stop.png" alt="音乐开关">
+            </button>
+        </div>
+    </aside>
 
     <main class="main-content">
         <div class="control-panel">
-            <button id="shuffle-btn">一键随机排版</button>
+            <button id="shuffle-btn" title="随机选择一组视频并重新加载">随机刷新/加载新视频</button>
         </div>
         
         <section id="masonry-container" class="masonry-grid">
-            </section>
+        </section>
+
+        <div id="load-more-trigger" class="load-more-trigger-style">
+            寻找更多Tian的视频 (点击或滚动到底部自动刷新)
+        </div>
     </main>
     
     <div id="modal" class="modal" onclick="closeModal()">

@@ -1,3 +1,5 @@
+// app.js (新版本)
+
 // --- 模态框交互元素 ---
 const modal = document.getElementById('modal');
 const modalVideo = document.getElementById('modal-video');
@@ -20,7 +22,7 @@ const musicFiles = [
 let currentTrackIndex = 0;
 let isLoading = false; // 加载状态标志
 
-// --- 音乐控制逻辑 (实现自动播放和播放不中断) ---
+// --- 音乐控制逻辑 (保持与之前提供的最新版本一致) ---
 
 const notes = ['♩', '♪', '♫']; 
 function createNoteParticle() {
@@ -45,6 +47,7 @@ function createNoteParticle() {
 function toggleMusic() {
     if (audio.paused) {
         audio.play();
+        // 播放时创建音符特效
         for(let i = 0; i < 3; i++) {
             createNoteParticle();
         }
@@ -69,9 +72,6 @@ function updateMusicUI() {
     }
 }
 
-/**
- * 初始化音乐播放器 (实现自动播放)
- */
 function initMusicPlayer() {
     if (musicFiles.length === 0) return;
 
@@ -82,7 +82,7 @@ function initMusicPlayer() {
 
     audio.src = musicFiles[currentTrackIndex];
     
-    // **核心修改：尝试自动播放**
+    // 尝试自动播放
     audio.play().catch(e => {
         console.log("浏览器阻止自动播放，等待用户手动交互...");
     });
@@ -92,7 +92,11 @@ function initMusicPlayer() {
 
 // --- 视频加载和渲染逻辑 (随机加载核心) ---
 
+/**
+ * 核心函数：从 videoSources 数组中随机选择一个 JSON 文件进行加载
+ */
 async function fetchRandomVideos() {
+    // 确保 DOM 元素存在，避免运行时错误
     const loadMoreTrigger = document.getElementById('load-more-trigger');
     
     if (isLoading) {
@@ -104,6 +108,7 @@ async function fetchRandomVideos() {
     loadMoreTrigger.textContent = '正在努力寻找新视频...';
     loadMoreTrigger.style.cursor = 'wait';
 
+    // 检查 data.js 中定义的 videoSources 是否存在
     if (typeof videoSources === 'undefined' || videoSources.length === 0) {
         loadMoreTrigger.textContent = '错误：视频数据源未配置。'; 
         loadMoreTrigger.style.cursor = 'pointer';
@@ -198,7 +203,8 @@ function renderVideos(data) {
         const workItem = document.createElement('div');
         workItem.classList.add('work-item');
         
-        const src = video.src; // 使用 JSON 中的完整外部 URL
+        // 注意：这里进行了严格的字符串转义，以确保 URL 和文本能正确传递到 onclick
+        const src = video.src.replace(/'/g, "\\'"); 
         const title = video.title.replace(/'/g, "\\'"); 
         const description = video.description.replace(/'/g, "\\'");
         
@@ -241,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreTrigger = document.getElementById('load-more-trigger');
     if (loadMoreTrigger) {
         // 绑定 Intersection Observer，实现滚动自动加载
+        // 确保 .main-content 滚动容器存在
         loadMoreObserver.observe(loadMoreTrigger); 
         
         // 绑定点击事件，实现手动加载
