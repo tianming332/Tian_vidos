@@ -1,5 +1,3 @@
-// app.js (新版本)
-
 // --- 模态框交互元素 ---
 const modal = document.getElementById('modal');
 const modalVideo = document.getElementById('modal-video');
@@ -7,217 +5,255 @@ const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const body = document.body;
 
-// --- 背景音乐控制元素 ---
+// --- 新增：背景音乐控制元素 ---
 const audio = document.getElementById('background-music');
 const musicToggleBtn = document.getElementById('music-toggle-btn');
 const musicIcon = document.getElementById('music-icon');
-const musicFxContainer = document.getElementById('music-fx-container'); 
 
-// 音乐文件列表 
+// 音乐文件列表 (请根据您的音乐文件路径修改)
 const musicFiles = [
     'music/bgm_01.mp3',
-    'music/bgm_02.mp4', 
+    'music/bgm_02.mp3',
     'music/bgm_03.mp3'
+    // ... 可在此处添加更多音乐文件
 ];
 let currentTrackIndex = 0;
-let isLoading = false; // 加载状态标志
 
-// --- 音乐控制逻辑 (保持与之前提供的最新版本一致) ---
 
-const notes = ['♩', '♪', '♫']; 
-function createNoteParticle() {
-    if (!musicFxContainer) return;
-    const noteChar = notes[Math.floor(Math.random() * notes.length)];
-    const endX = (Math.random() * 40 - 20) + 'px'; 
-    const endY = (Math.random() * -50 - 30) + 'px'; 
-    const duration = (Math.random() * 0.5 + 1.0) + 's'; 
-    const delay = (Math.random() * 0.2) + 's'; 
-    const particle = document.createElement('div');
-    particle.className = 'note-particle';
-    particle.textContent = noteChar;
-    particle.style.setProperty('--end-x', endX);
-    particle.style.setProperty('--end-y', endY);
-    particle.style.animation = `flyAndFade ${duration} ease-out ${delay} forwards`;
-    musicFxContainer.appendChild(particle);
-    particle.addEventListener('animationend', () => {
-        particle.remove();
-    });
-}
+// ====================== 新增：分页 / 懒加载相关全局变量 ======================
+const BASE_VIDEO_URL = 'https://tianming332.github.io/Tian-Video-Assets/videos/'; // 新仓库地址
+const PAGE_SIZE = 20;          // 每次加载 20 个
+let allVideos = [];            // 统一过新地址之后的完整视频列表
+let remainingVideos = [];      // 当前还没被取出的池子
+let isLoadingMore = false;     // 防止重复触发加载
 
+// ====================== 背景音乐控制逻辑 ======================
+
+/**
+ * 切换音乐播放/暂停状态
+ */
 function toggleMusic() {
     if (audio.paused) {
         audio.play();
-        // 播放时创建音符特效
-        for(let i = 0; i < 3; i++) {
-            createNoteParticle();
-        }
     } else {
         audio.pause();
     }
 }
 
+/**
+ * 加载下一首音乐并播放
+ */
 function playNextTrack() {
     currentTrackIndex = (currentTrackIndex + 1) % musicFiles.length;
     audio.src = musicFiles[currentTrackIndex];
     audio.play();
 }
 
+/**
+ * 更新音乐 UI 状态（图片和旋转动画）
+ */
 function updateMusicUI() {
     if (audio.paused) {
+        // 暂停状态
         musicIcon.src = 'assets/music_stop.png';
-        musicToggleBtn.classList.remove('music-playing'); 
+        musicToggleBtn.classList.remove('music-playing');
+        
+        // 确保在暂停时保存播放进度
+        localStorage.setItem('musicPlaybackTime', audio.currentTime);
+        localStorage.setItem('musicIsPlaying', 'false');
     } else {
+        // 播放状态
         musicIcon.src = 'assets/music_play.png';
-        musicToggleBtn.classList.add('music-playing'); 
+        musicToggleBtn.classList.add('music-playing');
+        
+        localStorage.setItem('musicIsPlaying', 'true');
     }
 }
 
+// 初始化音乐播放器
 function initMusicPlayer() {
     if (musicFiles.length === 0) return;
 
+    // 绑定音乐控制按钮的点击事件
     musicToggleBtn.addEventListener('click', toggleMusic);
+
+    // 绑定事件：音乐播放结束时，自动播放下一首
     audio.addEventListener('ended', playNextTrack);
+    
+    // 绑定事件：播放/暂停时更新 UI
     audio.addEventListener('play', updateMusicUI);
     audio.addEventListener('pause', updateMusicUI);
 
+    // 从本地存储读取状态
+    const isPlaying = localStorage.getItem('musicIsPlaying') === 'true';
+    const savedTime = parseFloat(localStorage.getItem('musicPlaybackTime')) || 0;
+    
+    // 加载第一首音乐
     audio.src = musicFiles[currentTrackIndex];
+
+    if (isPlaying) {
+        // 如果上次是播放状态，尝试恢复进度并播放 (需要用户交互才能自动播放，可能需要用户再点一下)
+        audio.currentTime = savedTime;
+        audio.play().catch(e => console.log("浏览器阻止自动播放，请手动点击"));
+    }
     
-    // 尝试自动播放
-    audio.play().catch(e => {
-        console.log("浏览器阻止自动播放，等待用户手动交互...");
-    });
-    
+    // 初始 UI 设置
     updateMusicUI(); 
 }
 
-// --- 视频加载和渲染逻辑 (随机加载核心) ---
 
-/**
- * 核心函数：从 videoSources 数组中随机选择一个 JSON 文件进行加载
- */
-async function fetchRandomVideos() {
-    // 确保 DOM 元素存在，避免运行时错误
-    const loadMoreTrigger = document.getElementById('load-more-trigger');
-    
-    if (isLoading) {
-        return;
-    }
-    
-    // 1. 设置加载状态和 UI 提示
-    isLoading = true;
-    loadMoreTrigger.textContent = '正在努力寻找新视频...';
-    loadMoreTrigger.style.cursor = 'wait';
-
-    // 检查 data.js 中定义的 videoSources 是否存在
-    if (typeof videoSources === 'undefined' || videoSources.length === 0) {
-        loadMoreTrigger.textContent = '错误：视频数据源未配置。'; 
-        loadMoreTrigger.style.cursor = 'pointer';
-        isLoading = false; 
-        return;
-    }
-
-    // 2. 随机选择一个数据源 URL
-    try {
-        document.getElementById('masonry-container').innerHTML = ''; // 清空瀑布流
-        
-        const randomIndex = Math.floor(Math.random() * videoSources.length);
-        const selectedUrl = videoSources[randomIndex];
-        
-        const response = await fetch(selectedUrl);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP 错误！状态: ${response.status}`);
-        }
-        
-        const newVideoData = await response.json();
-        
-        if (!Array.isArray(newVideoData) || newVideoData.length === 0) {
-            throw new Error("加载的数据格式不正确或为空。");
-        }
-        
-        // **更新全局数据，以便其他函数可以访问**
-        window.videoData = newVideoData; 
-        
-        // 3. 渲染新的视频列表
-        renderVideos(window.videoData);
-
-        // 4. 成功后重置状态
-        loadMoreTrigger.textContent = '寻找更多Tian的视频 (点击或滚动到底部自动刷新)';
-        loadMoreTrigger.style.cursor = 'pointer';
-        isLoading = false;
-
-    } catch (error) {
-        console.error("加载视频数据失败:", error);
-        document.getElementById('masonry-container').innerHTML = `<p style="text-align:center; padding-top: 50px; color: red;">加载视频列表失败。</p>`;
-        
-        // 5. 失败后重置状态
-        loadMoreTrigger.textContent = '加载失败，点击重试';
-        loadMoreTrigger.style.cursor = 'pointer';
-        isLoading = false;
-    }
-}
-
-
-// --- 性能优化：懒加载观察者 (保持不变) ---
+// ====================== 性能优化：懒加载观察者 ======================
 const videoObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
-        const video = entry.target; 
         if (entry.isIntersecting) {
+            const video = entry.target; 
             const source = video.querySelector('source');
+            
             if (source.src === "") {
+                // 真正开始播放时再填充 src
                 source.src = source.dataset.src; 
                 video.load(); 
-            } 
-        } else if (video.tagName === 'VIDEO') {
-            video.pause(); 
+                video.play(); 
+            } else if (video.paused) {
+                video.play();
+            }
+        } else if (entry.target.tagName === 'VIDEO') {
+            entry.target.pause();
         }
     });
 }, { rootMargin: '0px 0px 100px 0px' });
 
-// 【滚动加载核心】：无限滚动 Intersection Observer
-const loadMoreObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        // 当加载触发器进入视口时，且不在加载中，则触发新的随机加载
-        if (entry.isIntersecting && !isLoading) {
-            fetchRandomVideos();
-        }
+
+// ====================== 点赞功能 ======================
+function getLikes(src) {
+    const likes = JSON.parse(localStorage.getItem('videoLikes')) || {};
+    return likes[src] || 0;
+}
+
+function toggleLike(event, src) {
+    event.stopPropagation(); 
+    const likes = JSON.parse(localStorage.getItem('videoLikes')) || {};
+    likes[src] = (likes[src] || 0) + 1;
+    localStorage.setItem('videoLikes', JSON.stringify(likes));
+    const likeButton = event.currentTarget;
+    const likeCountSpan = likeButton.querySelector('.like-count');
+    likeCountSpan.textContent = likes[src];
+    
+    likeButton.style.backgroundColor = 'rgba(255, 0, 0, 0.7)';
+    likeButton.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        likeButton.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        likeButton.style.transform = 'scale(1)';
+    }, 150);
+}
+
+// ====================== 工具函数：数组洗牌 ======================
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// ====================== 新增：分页相关函数 ======================
+
+/**
+ * 把 data.js 里的旧地址统一替换到新的 Tian-Video-Assets/videos 下
+ * 保留原有 title / description
+ */
+function normalizeVideoData(rawData) {
+    return rawData.map(item => {
+        // 取原来地址最后一个文件名（比如 vid_01.mp4）
+        const filename = item.src.split('/').pop();
+        return {
+            ...item,
+            src: BASE_VIDEO_URL + filename
+        };
     });
-}, {
-    root: document.querySelector('.main-content'), 
-    rootMargin: '0px 0px 50px 0px', 
-    threshold: 0.1 
-});
+}
+
+/**
+ * 重置池子：把所有视频打乱后放入 remainingVideos
+ */
+function resetVideoPool() {
+    remainingVideos = [...allVideos];
+    shuffleArray(remainingVideos);
+}
+
+/**
+ * 取出下一批视频（PAGE_SIZE 个）
+ * 如果当前池子不够/为空，则重新洗牌
+ */
+function getNextBatch() {
+    if (remainingVideos.length === 0) {
+        resetVideoPool();
+    }
+    const batch = remainingVideos.splice(0, PAGE_SIZE);
+    return batch;
+}
+
+/**
+ * 下滑到底部时调用：自动加载下一批
+ */
+function handleScroll() {
+    const mainContent = document.querySelector('.main-content');
+    const scrollPosition = mainContent.scrollTop + mainContent.clientHeight;
+    const threshold = mainContent.scrollHeight - 200; // 距底部 200px 时触发
+
+    if (!isLoadingMore && scrollPosition >= threshold) {
+        isLoadingMore = true;
+        const nextBatch = getNextBatch();
+        // 这里是“追加模式”
+        renderVideos(nextBatch, true);
+        isLoadingMore = false;
+    }
+}
 
 
-// --- 渲染和辅助函数 (使用外部 URL) ---
-function renderVideos(data) {
+// ====================== 主要渲染逻辑 ======================
+
+/**
+ * 渲染视频
+ * @param {Array} data - 要渲染的视频数据
+ * @param {Boolean} append - 是否为追加模式（true=在后面继续加；false=清空后重渲染）
+ */
+function renderVideos(data, append = false) {
     const container = document.getElementById('masonry-container');
     
-    // 取消观察旧视频，清空容器
-    container.querySelectorAll('video').forEach(video => {
-        videoObserver.unobserve(video);
-    });
-    container.innerHTML = ''; 
+    if (!append) {
+        // 清空前先取消监听
+        container.querySelectorAll('video').forEach(video => {
+            videoObserver.unobserve(video);
+        });
+        container.innerHTML = ''; 
+    }
 
     data.forEach((video, index) => {
         const workItem = document.createElement('div');
         workItem.classList.add('work-item');
         
-        // 注意：这里进行了严格的字符串转义，以确保 URL 和文本能正确传递到 onclick
-        const src = video.src.replace(/'/g, "\\'"); 
+        const src = video.src;
         const title = video.title.replace(/'/g, "\\'"); 
         const description = video.description.replace(/'/g, "\\'");
         
-        workItem.setAttribute('onclick', `if (event.target.tagName !== 'BUTTON' && !event.target.closest('.like-btn')) openModal('${src}', '${title}', '${description}')`);
+        workItem.setAttribute(
+            'onclick',
+            `if (event.target.tagName !== 'BUTTON' && !event.target.closest('.like-btn')) openModal('${src}', '${title}', '${description}')`
+        );
 
-        const randomSeed = 100 + index; 
+        const initialLikes = getLikes(src);
+        const randomSeed = 100 + Math.floor(Math.random() * 10000); 
         
         const contentHTML = `
             <div class="item-content">
                 <video muted loop poster="https://picsum.photos/400/600?random=${randomSeed}">
-                    <source data-src="${video.src}" type="video/mp4">
+                    <!-- 懒加载：真正出现在视口时才把 data-src 填到 src -->
+                    <source data-src="${src}" src="" type="video/mp4">
                     您的浏览器不支持视频。
                 </video>
+                <button class="like-btn" onclick="toggleLike(event, '${src}')">
+                    ❤️ <span class="like-count">${initialLikes}</span>
+                </button>
             </div>
         `;
         
@@ -225,52 +261,52 @@ function renderVideos(data) {
         container.appendChild(workItem);
         
         const videoElement = workItem.querySelector('video');
+        
         videoObserver.observe(videoElement);
+        
+        videoElement.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
     });
 }
 
 
-// --- 初始加载和事件绑定 ---
+// ====================== 初始加载和事件绑定 ======================
 document.addEventListener('DOMContentLoaded', function() {
+    if (typeof videoData === 'undefined' || videoData.length === 0) {
+        console.error("视频数据未找到或为空。请检查 data.js 文件是否正确引入。");
+        return;
+    }
     
-    // 1. 初始加载：首次随机加载一组视频
-    fetchRandomVideos();
+    // 0. 把 data.js 里的 src 统一换到新仓库地址
+    allVideos = normalizeVideoData(videoData);
 
-    // 2. 绑定随机刷新按钮事件
+    // 1. 初始化视频池子
+    resetVideoPool();
+
+    // 2. 初次加载 20 个视频
+    const firstBatch = getNextBatch();
+    renderVideos(firstBatch);
+
+    // 3. 绑定「一键刷新」按钮：换一批随机 20 个
     const shuffleBtn = document.getElementById('shuffle-btn');
     shuffleBtn.addEventListener('click', function() {
-        fetchRandomVideos();
+        resetVideoPool();
+        const batch = getNextBatch();
+        renderVideos(batch, false); // 不追加，重新渲染一批
         document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
     });
     
-    // 3. 绑定滚动触发器和点击事件
-    const loadMoreTrigger = document.getElementById('load-more-trigger');
-    if (loadMoreTrigger) {
-        // 绑定 Intersection Observer，实现滚动自动加载
-        // 确保 .main-content 滚动容器存在
-        loadMoreObserver.observe(loadMoreTrigger); 
-        
-        // 绑定点击事件，实现手动加载
-        loadMoreTrigger.addEventListener('click', function() {
-            if (!isLoading) {
-                fetchRandomVideos();
-                document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    }
-
-    // 4. 初始化背景音乐播放器 (尝试自动播放)
+    // 4. 绑定向下滚动自动加载下一批
+    const mainContent = document.querySelector('.main-content');
+    mainContent.addEventListener('scroll', handleScroll);
+    
+    // 5. 初始化背景音乐播放器
     initMusicPlayer();
-
-    // 绑定 ESC 关闭模态框事件
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modal.style.display === 'flex') {
-            closeModal();
-        }
-    });
 });
 
-// --- 模态框交互函数 (确保模态框关闭后背景音乐恢复) ---
+
+// ====================== 模态框交互函数 ======================
 function openModal(videoSrc, title, description) {
     // 模态框打开时暂停背景音乐
     if (!audio.paused) {
@@ -291,6 +327,14 @@ function closeModal() {
     modalVideo.pause();
     body.style.overflow = 'auto';
     
-    // 模态框关闭后尝试恢复背景音乐
-    audio.play().catch(e => console.log("")); // 尝试播放，不打断用户体验
+    // 模态框关闭后恢复背景音乐
+    if (localStorage.getItem('musicIsPlaying') === 'true') {
+        audio.play().catch(e => console.log("无法自动恢复背景音乐播放"));
+    }
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modal.style.display === 'flex') {
+        closeModal();
+    }
+});
