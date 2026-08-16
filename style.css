@@ -46,56 +46,28 @@ body.dark-background {
 }
 .nav-item:hover, .nav-item.active { background-color: #555; }
 .nav-icon { width: 28px; height: 28px; object-fit: contain; }
+.nav-icon-text { display: grid; place-items: center; color: currentColor; font: 22px/1 Arial, sans-serif; }
 
-/* --- 底部音乐控制 UI：按钮上移 + 横向音量条 + 小音符特效 --- */
+/* --- 新增：底部音乐控制 UI --- */
 .sidebar-bottom {
-    margin-bottom: 26px;                 /* 离页面底部留一点呼吸空间 */
-    padding-top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    padding-top: 20px;
 }
 
-/* 包裹音乐按钮和小音符的容器 */
-.music-ui-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 播放按钮本体 */
 .music-control-btn {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 50%; /* 圆形效果 */
     padding: 0;
     border: none;
     cursor: pointer;
     overflow: hidden;
-    background-color: #222;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+    background-color: #222;
+    transition: box-shadow 0.3s;
 }
 
 .music-control-btn:hover {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-    transform: translateY(-1px);
-}
-
-/* 播放状态下的柔和外发光 */
-.music-control-btn.music-active {
-    background: radial-gradient(circle at 30% 30%, #444 0, #222 55%, #111 100%);
-    box-shadow:
-        0 0 10px rgba(255, 255, 255, 0.35),
-        0 0 18px rgba(0, 180, 255, 0.35);
-}
-
-.music-control-btn.music-active:hover {
-    box-shadow:
-        0 0 14px rgba(255, 255, 255, 0.45),
-        0 0 24px rgba(0, 200, 255, 0.4);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 .music-control-btn img {
@@ -106,132 +78,14 @@ body.dark-background {
     transition: transform 0.3s;
 }
 
-/* 音乐播放时的旋转动画（保留原有效果） */
+/* 音乐播放时的旋转动画 */
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .music-playing img {
-    animation: spin 8s linear infinite;
-}
-
-/* 横向音量滑块，位于按钮下方 */
-#music-volume {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 60px;              /* 稍短一些以适应 80px 侧栏 */
-    height: 6px;
-    border-radius: 999px;
-    background: linear-gradient(to right, #555, #ddd);
-    outline: none;
-    cursor: pointer;
-}
-
-/* WebKit 轨道 & 拇指 */
-#music-volume::-webkit-slider-runnable-track {
-    height: 6px;
-    border-radius: 999px;
-    background: transparent; /* 轨道用父元素背景 */
-}
-#music-volume::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
-    margin-top: -3px;
-}
-
-/* Firefox 轨道 & 拇指 */
-#music-volume::-moz-range-track {
-    height: 6px;
-    border-radius: 999px;
-    background: transparent;
-}
-#music-volume::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
-}
-
-/* 小音符容器：相对按钮居中，向上浮动 */
-.music-note-container {
-    position: absolute;
-    pointer-events: none;
-    width: 72px;
-    height: 72px;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-/* 单个小音符 */
-.music-note {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.95);
-    opacity: 0;
-    animation: music-note-float 1.6s ease-out forwards;
-}
-
-/* 小音符缓慢浮起 + 消散动画 */
-@keyframes music-note-float {
-    0% {
-        transform: translate(-50%, 0) scale(0.7);
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -26px) scale(1.05);
-        opacity: 0;
-    }
-}
-
-/* 小音符容器 */
-.music-note-container {
-    position: absolute;
-    pointer-events: none;
-    width: 80px;
-    height: 80px;
-    top: 0;
-    left: 0;
-}
-
-/* 单个小音符 */
-.music-note {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.95);
-    opacity: 0;
-    animation: music-note-float 1.6s ease-out forwards;
-}
-
-/* 小音符缓慢浮起 + 消散动画 */
-@keyframes music-note-float {
-    0% {
-        transform: translate(-50%, 0) scale(0.7);
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -26px) scale(1.05);
-        opacity: 0;
-    }
+    animation: spin 8s linear infinite; /* 8秒一圈，持续旋转 */
 }
 
 
@@ -246,7 +100,7 @@ body.dark-background {
 
 /* --- 随机排版控制面板样式 (半透明效果) --- */
 .control-panel {
-    padding: 10px 120px 0 120px; 
+    padding: 72px 120px 0 120px; 
     text-align: right; 
 }
 
@@ -364,7 +218,7 @@ body.dark-background {
     .main-content {
         width: 100%; margin-left: 0; padding-bottom: 60px; padding-right: 0;
     }
-    .control-panel { padding: 10px 10px 0 10px; }
+    .control-panel { padding: 62px 10px 0 10px; }
     .masonry-grid { column-count: 2; padding: 10px; } 
 }
 
