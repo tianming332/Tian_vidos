@@ -104,12 +104,12 @@ const videoObserver = new IntersectionObserver((entries, observer) => {
             const video = entry.target; 
             const source = video.querySelector('source');
             
-            if (source.src === "") {
+            if (!source.getAttribute('src')) {
                 source.src = source.dataset.src; 
                 video.load(); 
-                video.play(); 
+                video.play().catch(() => {});
             } else if (video.paused) {
-                video.play();
+                video.play().catch(() => {});
             }
         } else if (entry.target.tagName === 'VIDEO') {
             entry.target.pause();
@@ -158,7 +158,7 @@ function renderVideos(data) {
     });
     container.innerHTML = ''; 
 
-    data.forEach((video, index) => {
+    data.forEach((video) => {
         const workItem = document.createElement('div');
         workItem.classList.add('work-item');
         
@@ -169,11 +169,9 @@ function renderVideos(data) {
         workItem.setAttribute('onclick', `if (event.target.tagName !== 'BUTTON' && !event.target.closest('.like-btn')) openModal('${src}', '${title}', '${description}')`);
 
         const initialLikes = getLikes(video.src);
-        const randomSeed = 100 + index; 
-        
         const contentHTML = `
             <div class="item-content">
-                <video muted loop poster="https://picsum.photos/400/600?random=${randomSeed}">
+                <video muted loop preload="none">
                     <source data-src="${video.src}" type="video/mp4">
                     您的浏览器不支持视频。
                 </video>
