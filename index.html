@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Videos｜天将明影像档案</title>
+    <title>AI视频｜天将明影像档案</title>
     <meta name="description" content="天将明的实景拍摄、AI 改造与生成式短片档案。">
     <link rel="stylesheet" href="style.css">
-    <style>.archive-bar{position:fixed;z-index:500;left:96px;right:16px;top:14px;display:flex;justify-content:space-between;align-items:center;padding:10px 13px;color:#fff;background:rgba(225,230,238,.13);border:1px solid rgba(255,255,255,.34);border-radius:12px;backdrop-filter:blur(18px);font:10px Arial,sans-serif;letter-spacing:.06em}.archive-bar a{color:inherit;text-decoration:none}.archive-bar a:first-child{font-weight:700}.archive-bar nav{display:flex;gap:18px}.archive-bar a:hover{text-decoration:underline}@media(max-width:800px){.archive-bar{left:10px;right:10px;top:8px}.archive-bar nav a:first-child{display:none}}</style>
+    <style>.archive-bar{position:fixed;z-index:500;left:96px;right:16px;top:14px;display:flex;justify-content:space-between;align-items:center;padding:10px 13px;color:#fff;background:rgba(225,230,238,.13);border:1px solid rgba(255,255,255,.34);border-radius:12px;backdrop-filter:blur(18px);font:10px Arial,sans-serif;letter-spacing:.06em}.archive-bar a{color:inherit;text-decoration:none}.archive-bar a:first-child{font-weight:700}.archive-bar nav{display:flex;gap:18px}.archive-bar a:hover{text-decoration:underline}.video-load-status{padding:28px 16px 36px;color:rgba(255,255,255,.66);font:11px Arial,sans-serif;letter-spacing:.08em;text-align:center}.video-load-sentinel{height:1px}@media(max-width:800px){.archive-bar{left:10px;right:10px;top:8px}.archive-bar nav a:first-child{display:none}}</style>
 </head>
 <body class="dark-background">
 
@@ -19,7 +19,7 @@
     <nav class="sidebar-nav">
         <ul>
             <li>
-                <a href="#masonry-container" class="nav-item active" title="AI-Videos 页面">
+                <a href="#masonry-container" class="nav-item active" title="AI视频页面">
                     <span class="nav-icon nav-icon-text" aria-hidden="true">▦</span>
                 </a>
             </li>
@@ -39,15 +39,17 @@
         
         <section id="masonry-container" class="masonry-grid">
             </section>
+        <div id="video-load-sentinel" class="video-load-sentinel" aria-hidden="true"></div>
+        <p id="video-load-status" class="video-load-status" aria-live="polite">准备加载视频库 / PREPARING VIDEO LIBRARY</p>
     </main>
     
-    <div id="modal" class="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
+    <div id="modal" class="modal">
+        <div class="modal-content">
             <video id="modal-video" controls loop autoplay></video>
             <div class="modal-info">
                 <h3 id="modal-title"></h3>
                 <p id="modal-description"></p>
-                <button class="close-btn" onclick="closeModal()">关闭 (ESC)</button>
+                <button class="close-btn" type="button">关闭 (ESC)</button>
             </div>
         </div>
     </div>
