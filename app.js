@@ -124,7 +124,20 @@ function createVideoItem(video) {
     likeButton.innerHTML = `❤️ <span class="like-count">${getLikes(video.src)}</span>`;
     likeButton.addEventListener("click", (event) => toggleLike(event, video.src));
 
-    itemContent.append(videoElement, likeButton);
+    // Surface existing metadata without changing media sources or playback behavior.
+    const caption = document.createElement("div");
+    caption.className = "tjm-video-caption";
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.className = "tjm-video-open";
+    openButton.setAttribute("aria-label", `播放：${video.title}`);
+    const title = document.createElement("strong");
+    title.textContent = video.title;
+    openButton.appendChild(title);
+    const sourceLabel = document.createElement("small");
+    sourceLabel.textContent = video.repository || "VIDEO ARCHIVE";
+    caption.append(openButton, sourceLabel);
+    itemContent.append(videoElement, likeButton, caption);
     workItem.appendChild(itemContent);
     workItem.addEventListener("click", (event) => {
         if (!event.target.closest(".like-btn")) openModal(video);
